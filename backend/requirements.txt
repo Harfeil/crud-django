@@ -13,3 +13,4 @@ django-environ             # For managing environment variables
 # For testing
 pytest                      # Testing framework
 pytest-django               # Django integration for pytest
+# This is a minor change to trigger rebuild
