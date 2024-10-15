@@ -1,0 +1,15 @@
+Django>=4.0,<5.0          # Ensure you're using a specific version range
+djangorestframework>=3.12  # For RESTful API support
+mysqlclient                # MySQL database connector
+# or you can use PyMySQL if you prefer:
+PyMySQL
+
+# Optional packages
+django-cors-headers        # For handling Cross-Origin Resource Sharing
+gunicorn                   # WSGI server for running your Django application in production
+whitenoise                 # For serving static files in production
+django-environ             # For managing environment variables
+
+# For testing
+pytest                      # Testing framework
+pytest-django               # Django integration for pytest

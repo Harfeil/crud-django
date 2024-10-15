@@ -1,0 +1,14 @@
+py -m pip install virtualenv
+pip install virtualenv
+py -m virtual venv
+python -m virtualenv venv
+npm create-react-app frontend
+npm install react-router-dom
+npm install -g npm
+py -m pip install django
+pip nstall django-cors-headers
+npm i react-router-dom
+npm install react-hook-form
+npm install @mui/x-date-pickers
+npm install dayjs
+npm install axios

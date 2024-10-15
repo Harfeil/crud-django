@@ -1,0 +1,71 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: django_app
+    restart: always
+    env_file:
+      - ./backend/.env # Ensure this path is correct
+    expose:
+      - "8000"
+    ports:
+      - "8001:8000" # Host port:Container port
+    volumes:
+      - static_volume:/app/static
+      - ./backend/wait-for-it.sh:/usr/local/bin/wait-for-it.sh # Mount the script
+    depends_on:
+      db:
+        condition: service_healthy
+    command: >
+      sh -c "/usr/local/bin/wait-for-it.sh db:3306 -- python manage.py runserver 0.0.0.0:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: react_app
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: "default" # Name of the database
+      MYSQL_USER: "mysql" # Normal user for MySQL
+      MYSQL_PASSWORD: "RPLMgowml05WaWRH9L1kZoQ1prdECEjXoZtLslOsASB1GqtlkjtjzwGW6BZ3QMOX" # Normal user password
+      MYSQL_ROOT_PASSWORD: "RPAItwJo68W7iqYNYwEFheSozjmZDf0fSwtwicMAcGBS7dKZ4e3EyXbEhqZ2fsYE" # Root password
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306" # Ensure this port isn't used elsewhere
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - app-network
+
+volumes:
+  static_volume:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
