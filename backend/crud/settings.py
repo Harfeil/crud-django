@@ -55,7 +55,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'tg808400ow0wgc4owsoo8gkc.66.42.59.139.sslip.io',
+    'http://localhost:3000',
+    '127.0.0.1'
 ]
 
 ROOT_URLCONF = 'crud.urls'
