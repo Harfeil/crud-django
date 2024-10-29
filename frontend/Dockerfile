@@ -7,14 +7,12 @@ WORKDIR /app
 # Copy package.json and yarn.lock into the container
 COPY package.json yarn.lock ./
 
-# Install the dependencies
-RUN yarn install
 
 # Copy the rest of the application code into the container
 COPY . .
 
 # Build the application
-RUN yarn build
+RUN npm build
 
 # Stage 2: Serve the built app using Nginx
 FROM nginx:alpine
