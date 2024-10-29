@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build:
@@ -6,21 +8,21 @@ services:
     container_name: django_app
     restart: always
     env_file:
-      - ./backend/.env # Ensure this path is correct
+      - ./backend/.env  # Ensure this path points to your backend .env file
     expose:
       - "8000"
     ports:
-      - "8001:8000" # Host port:Container port
+      - "8001:8000"  # Host port:Container port
     volumes:
       - static_volume:/app/static
-      - ./backend/wait-for-it.sh:/usr/local/bin/wait-for-it.sh # Mount the script
+      - ./backend/wait-for-it.sh:/wait-for-it.sh  # Mount the wait-for-it script
     depends_on:
       db:
         condition: service_healthy
     command: >
-      sh -c "/usr/local/bin/wait-for-it.sh db:3306 -- python manage.py runserver 0.0.0.0:8000"
+      sh -c "/wait-for-it.sh db:3306 -- python manage.py runserver 0.0.0.0:8000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -46,14 +48,14 @@ services:
     container_name: mysql_db
     restart: always
     environment:
-      MYSQL_DATABASE: "default" # Name of the database
-      MYSQL_USER: "mysql" # Normal user for MySQL
-      MYSQL_PASSWORD: "RPLMgowml05WaWRH9L1kZoQ1prdECEjXoZtLslOsASB1GqtlkjtjzwGW6BZ3QMOX" # Normal user password
-      MYSQL_ROOT_PASSWORD: "RPAItwJo68W7iqYNYwEFheSozjmZDf0fSwtwicMAcGBS7dKZ4e3EyXbEhqZ2fsYE" # Root password
+      MYSQL_DATABASE: "default"  # Name of the database
+      MYSQL_USER: "mysql"  # Normal user for MySQL
+      MYSQL_PASSWORD: "dQGFRIJ5CmPgThVMSemeyWiycLxnm1HYp2YBcIB1bL8VOizTfTq1mlx8UtZzRI9Y"  # MySQL user password
+      MYSQL_ROOT_PASSWORD: "nLt7GH412FsV8QVVEYwtiUB7ZvH3xRbEpqEhF0FfgokAFUxd3aMRO9sl41t9Xef3"  # Root password
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
-      - "3306:3306" # Ensure this port isn't used elsewhere
+      - "3306:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s
